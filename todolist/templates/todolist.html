@@ -24,9 +24,9 @@
         {% for task in all_task %}
           <tr class="table-active">
             <th scope="row">1</th>
-            <td>Gaurav</td>
-            <td>Chauhan</td>
-            <td>@gaurav</td>
+            <td>{{task.task}}</td>
+            <td>{{task.is_completed}}</td>
+            <td>Edit</td>
             <td>delete</td>
           </tr>
         {% endfor %}
