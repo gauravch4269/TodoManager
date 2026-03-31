@@ -4,33 +4,60 @@
   TaskList
 {% endblock %}
 
-<!--  {% block headline %}
-    Welcome to my {{ page }}    
-{% endblock headline %}   -->
+{% block headline %}
+    Welcome to my Database    
+{% endblock headline %}        
 
 {% block content %}
   <div class="container">
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Task Name</th>
-          <th scope="col">Status</th>
-          <th scope="col">Edit</th>
-          <th scope="col">Delete</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for task in all_task %}
-          <tr class="table-active">
-            <th scope="row">1</th>
-            <td>{{task.task}}</td>
-            <td>{{task.is_completed}}</td>
-            <td>Edit</td>
-            <td>delete</td>
-          </tr>
-        {% endfor %}
-      </tbody>
+    <br>
+    {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+    {% endif %}
+  
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3" >
+           
+            <input type="text" class="form-control" name="task" placeholder="New Task ?" >
+        </div>
+        <button type="submit" class="btn btn-primary">Add Task</button>
+    </form>
+
+    </br>
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">Task Name</th>
+                <th scope="col">Status</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in all_tasks %}
+                {% if task.is_completed %}
+                    <tr class="table-success">
+                        <td>{{ task.id }} | {{ task.task }}</td>
+                        <td>Completed</td>
+                        <td><a href="{% url 'edit_task' task.id %}">Edit</a></td>
+                        <td><a href="{% url 'delete_task' task.id %}">Delete</a></td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td>{{ task.id }} | {{ task.task }}</td>
+                        <td>Not Completed</td>
+                        <td><a href="{% url 'edit_task' task.id %}">Edit</a></td>
+                        <td><a href="{% url 'delete_task' task.id %}">Delete</a></td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
     </table>
-  </div>
+</div>
 {% endblock %}

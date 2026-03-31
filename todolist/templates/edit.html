@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Edit task
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <input type="text" class="form-control" name="task" placeholder="{{task_obj.task}}", value="{{task_obj.task}}" />
+      </div>
+      <button type="submit" class="btn btn-primary">Update Task</button>
+    </form>
+  </div>
+{% endblock %}
