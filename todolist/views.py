@@ -4,6 +4,7 @@ from todolist.models import Task
 from todolist.forms import TaskForm
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
+from django.core.paginator import Paginator
 
 
 def todolist(request):
@@ -16,6 +17,11 @@ def todolist(request):
         messages.success(request,"Something went wrong!")
     
     all_tasks = Task.objects.all()
+    paginator = Paginator(all_tasks,5)
+    page = request.GET.get("page")
+
+    all_tasks = paginator.get_page(page)
+
     context = {
         "page":"todolist",
         "all_tasks":all_tasks,
@@ -42,12 +48,15 @@ def contact(request):
     return render(request,"contact.html",context)
 
 def about(request):
-    context = {
+    if request.method == 'GET':
+        return HttpResponse("This is GET Method")
+    '''context = {
         "page":"about"
-    }
+    }'''
     return render(request,"about.html",context)
 
 def delete_task(request,task_id):
+     
     task_obj=Task.objects.get(id=task_id)
     task_obj.delete()
     messages.success(request,"Task deleted")
@@ -67,6 +76,21 @@ def edit_task(request,task_id):
             "task_obj":task_obj
         }
         return render(request,"edit.html", context)
+
+def complete_task(request,task_id):
+    task_obj=Task.objects.get(id=task_id)
+    task_obj.is_completed=True
+    task_obj.save()
+    messages.success(request,"Status changed")
+    return redirect("todolist")
+
+
+def pending_task(request,task_id):
+    task_obj=Task.objects.get(id=task_id)
+    task_obj.is_completed=False
+    task_obj.save()
+    messages.success(request,"Status changed")
+    return redirect("todolist")
 
 
 
